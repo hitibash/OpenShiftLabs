@@ -1,0 +1,156 @@
+# Test Labs Workflow
+#
+# This workflow automatically detects and tests changed lab modules in Labs/guides/.
+#
+# Main steps:
+# 1. Detect Changes - Compares git diff to find modified lab modules (NNN-module-name/)
+# 2. Test Labs - Runs _demo.sh for each changed module in parallel using a dynamic matrix
+# 3. Summary - Reports overall test results (pass/fail/skip)
+#
+# Features:
+# - Only tests modules that have changes (efficient)
+# - Falls back to testing all modules if workflow itself changes
+# - Runs demos in parallel (fail-fast: false)
+# - CI-friendly: demo scripts skip gracefully when tools/auth unavailable
+
+name: Test Labs
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "Labs/guides/**"
+      - ".github/workflows/test-labs.yaml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "Labs/guides/**"
+      - ".github/workflows/test-labs.yaml"
+
+jobs:
+  detect-changes:
+    name: Detect Changed Labs
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      has-changes: ${{ steps.set-matrix.outputs.has-changes }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed lab modules
+        id: set-matrix
+        run: |
+          # Get list of changed files
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          else
+            # PRs and pushes have different canonical SHAs to compare.
+            # For push events, compare with previous commit
+            BASE_SHA="${{ github.event.before }}"
+            HEAD_SHA="${{ github.sha }}"
+          fi
+          
+          # If BASE_SHA is all zeros (initial commit), use HEAD~1
+          if [[ "$BASE_SHA" =~ ^0+$ ]]; then
+            BASE_SHA="HEAD~1"
+          fi
+          
+          echo "Comparing $BASE_SHA..$HEAD_SHA"
+          
+          # Get changed files in Labs/guides/
+          CHANGED_FILES=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" -- 'Labs/guides/*' || echo "")
+          
+          # Extract unique module directories
+          MODULES=$(echo "$CHANGED_FILES" | grep -E '^Labs/guides/[0-9]{3}-[^/]+/' | sed -E 's|^(Labs/guides/[0-9]{3}-[^/]+)/.*|\1|' | sort -u || echo "")
+          
+          # If no modules changed, check all modules (for workflow changes or initial setup)
+          if [ -z "$MODULES" ]; then
+            echo "No specific modules changed, checking all modules with _demo.sh"
+            MODULES=$(find Labs/guides -maxdepth 1 -type d -name '[0-9][0-9][0-9]-*' | sort)
+          fi
+          
+          # Build JSON array for matrix
+          MATRIX_JSON="["
+          FIRST=true
+          for MODULE in $MODULES; do
+            if [ -f "$MODULE/_demo.sh" ]; then
+              if [ "$FIRST" = true ]; then
+                FIRST=false
+              else
+                MATRIX_JSON="$MATRIX_JSON,"
+              fi
+              MODULE_NAME=$(basename "$MODULE")
+              MATRIX_JSON="$MATRIX_JSON{\"path\":\"$MODULE\",\"name\":\"$MODULE_NAME\"}"
+            fi
+          done
+          MATRIX_JSON="$MATRIX_JSON]"
+          
+          # Check if we have any modules to test
+          if [ "$MATRIX_JSON" = "[]" ]; then
+            echo "has-changes=false" >> $GITHUB_OUTPUT
+            echo "matrix={\"include\":[]}" >> $GITHUB_OUTPUT
+            echo "No lab modules with _demo.sh found"
+          else
+            echo "has-changes=true" >> $GITHUB_OUTPUT
+            echo "matrix={\"include\":$MATRIX_JSON}" >> $GITHUB_OUTPUT
+            echo "Found modules to test:"
+            echo "$MATRIX_JSON" | jq -r '.[] | .name'
+          fi
+
+  test-labs:
+    name: Test ${{ matrix.name }}
+    needs: detect-changes
+    if: needs.detect-changes.outputs.has-changes == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Make demo script executable
+        run: chmod +x ${{ matrix.path }}/_demo.sh
+
+      - name: Run demo script
+        id: demo
+        run: |
+          echo "Testing module: ${{ matrix.name }}"
+          cd ${{ matrix.path }}
+          bash _demo.sh demo
+
+      - name: Report success
+        if: success()
+        run: echo "[SUCCESS] ${{ matrix.name }} demo passed"
+
+      - name: Report failure
+        if: failure()
+        run: echo "[FAILURE] ${{ matrix.name }} demo failed"
+  summary:
+    name: Test Summary
+    needs: [detect-changes, test-labs]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results
+        run: |
+          if [ "${{ needs.detect-changes.outputs.has-changes }}" == "false" ]; then
+            echo "[INFO] No lab modules changed or detected"
+            exit 0
+          fi
+          
+          if [ "${{ needs.test-labs.result }}" == "success" ]; then
+            echo "[SUCCESS] All lab demos passed"
+            exit 0
+          elif [ "${{ needs.test-labs.result }}" == "skipped" ]; then
+            echo "⏭[SKIPPED] Lab tests were skipped"
+            exit 0
+          else
+            echo "[ERROR] Some lab demos failed"
+            exit 1
+          fi
