@@ -43,7 +43,7 @@ mkdocs serve
 Follow these steps when creating or maintaining labs:
 
 1. **Clone and branch** — Clone this repository and create a feature branch for your changes.
-2. **Choose or create a module** — Work within an existing module under `Labs/guides/NNN-module-name/` or create a new numbered module following the naming convention (e.g., `011-new-topic`).
+2. **Choose or create a module** — Work within an existing module under `Labs/guides/NNN-module-name/` or create a new numbered module following the naming convention (e.g., `013-new-topic`).
 3. **Add content** — Each module should include:
    - `README.md` — Module overview with learning objectives, tasks, and estimated duration
    - `_demo.sh` — CI-friendly demo script that checks tooling and performs smoke tests (use existing modules as templates (temporarely))
@@ -69,8 +69,8 @@ A structured lab modules under `Labs/guides/` following the proposed course work
 
 Modules are numbered for sequential learning:
 
-- **000-setup** — Cluster provisioning and access
-- **001-installation** — Core OpenShift/OKD installation and CLI tools
+- **000-setup** — Accessing OpenShift web console.
+- **001-verify-cluster** — Verifying OpenShift cluster health and checking component status
 - **002-new-user** — Creating and managing users and roles
 - **003-new-project** — Creating namespaces/projects with quotas and limits
 - **004-docker-lifecycle** — Building, tagging, and managing local Docker images
@@ -80,6 +80,8 @@ Modules are numbered for sequential learning:
 - **008-deploying** — DeploymentConfig vs K8s Deployment, rolling strategies, and scaling
 - **009-services-routes** — Exposing services using routes, Ingress, and load balancing
 - **010-monitoring** — Prometheus, Grafana, and alerts; instrumenting applications
+- **011-logging** — Centralized logging with EFK/ELK stack for cluster and application logs
+- **012-scaling** — Horizontal Pod Autoscaling and manual scaling strategies
 
 
 ## Recent Changes

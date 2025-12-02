@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-12-02] - Lab Structure Enhancement
+
+### Added
+- Created `001-verify-cluster` module for cluster health verification between setup and user management
+- Created `011-logging` module for centralized logging with EFK/ELK stack
+- Created `012-scaling` module for HPA and manual scaling strategies
+
+### Changed
+- Renumbered all modules from 001-009 to 002-010 to accommodate new verify-cluster module
+- Updated `mkdocs/06-mkdocs-nav.yml` with new module order and paths
+- Updated root `README.md` to reflect all 13 modules (000-012) with accurate descriptions
+
+### Technical Details
+- All new modules follow the established template with README.md and _demo.sh scripts
+- Module numbering now accommodates logical flow: setup → verify → user management → projects
+
 ## [2025-11-30] - Dynamic CI Workflow
 
 ### Added

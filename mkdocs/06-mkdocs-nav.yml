@@ -5,14 +5,17 @@
 nav:
   - Documentation Site Template: README.md
   - How-to Guides:
-    - How-to Guides: guides/README.md
-    - GitHub Avatars Setup Guide: guides/github-avatars-setup.md
-    - Installation Guide: guides/installation-guide.md
-    - init_site.sh Script: guides/understanding-init-script.md
-  - Reference Documentation:
-    - Reference Documentation: reference/README.md
-    - API Reference: reference/api-reference.md
-  - Tutorials:
-    - Tutorials: tutorials/README.md
-    - Basic Tutorial: tutorials/01-basic-tutorial.md
-    - Advanced Features Tutorial: tutorials/02-advanced-tutorial.md
+    - 000-Setup: guides/000-setup/README.md
+    - 001-Verify-Cluster: guides/001-verify-cluster/README.md
+    - 002-New-User: guides/002-new-user/README.md
+    - 003-New-Project: guides/003-new-project/README.md
+    - 004-Docker-Lifecycle: guides/004-docker-lifecycle/README.md
+    - 005-Docker-Pipeline: guides/005-docker-pipeline/README.md
+    - 006-Hooks-Setup: guides/006-hooks-setup/README.md
+    - 007-Images-ImageStream: guides/007-images-imagestream/README.md
+    - 008-Deploying: guides/008-deploying/README.md
+    - 009-Services-Routes: guides/009-services-routes/README.md
+    - 010-Monitoring: guides/010-monitoring/README.md
+    - 011-Logging: guides/011-logging/README.md
+    - 012-Scaling: guides/012-scaling/README.md
+
