@@ -14,6 +14,8 @@ Each lab should include objectives, prerequisites, a step-by-step walkthrough, a
 Key directories and files:
 
 - `Labs/` — Markdown content for guides, tutorials, and hands-on labs. Modules are organized by subject (e.g., `guides/`, `tutorials/`, `reference/`).
+  - `Labs/tutorials/` — Hands-on OpenShift lab modules (000-setup through 012-scaling)
+  - `Labs/guides/` — Additional how-to guides and documentation
 - `mkdocs/` — modular MkDocs configuration used to build site.
 - `init_site.sh` — setup helper script to initialize local dev environment.
 - `requirements.txt` — Python (MkDocs) requirements for local build.
@@ -43,12 +45,12 @@ mkdocs serve
 Follow these steps when creating or maintaining labs:
 
 1. **Clone and branch** — Clone this repository and create a feature branch for your changes.
-2. **Choose or create a module** — Work within an existing module under `Labs/guides/NNN-module-name/` or create a new numbered module following the naming convention (e.g., `013-new-topic`).
+2. **Choose or create a module** — Work within an existing module under `Labs/tutorials/NNN-module-name/` or create a new numbered module following the naming convention (e.g., `013-new-topic`).
 3. **Add content** — Each module should include:
    - `README.md` — Module overview with learning objectives, tasks, and estimated duration
-   - `_demo.sh` — CI-friendly demo script that checks tooling and performs smoke tests (use existing modules as templates (temporarely))
+   - `_demo.sh` — CI-friendly demo script that checks tooling and performs smoke tests (use existing modules as templates)
    - Additional lab files as needed (step-by-step guides, manifests, scripts)
-4. **Update navigation** — Add your module to `mkdocs/06-mkdocs-nav.yml` in the appropriate order under "How-to Guides"
+4. **Update navigation** — Add your module to `mkdocs/06-mkdocs-nav.yml` in the appropriate order under "Tutorials"
 5. **Test locally** — Run `mkdocs serve` to preview the docs site and test your `_demo.sh` script
 6. **Submit PR** — Create a pull request with a clear description of your changes
 
@@ -60,9 +62,9 @@ Follow these steps when creating or maintaining labs:
 - Use consistent formatting and terminology across modules
 
 ---
-## Course Modules (Labs/guides)
+## Course Modules (Labs/tutorials)
 
-A structured lab modules under `Labs/guides/` following the proposed course workplan. Each module includes:
+A structured lab modules under `Labs/tutorials/` following the proposed course workplan. Each module includes:
 
 - **README.md** — Short description, learning objectives, and tasks
 - **_demo.sh** — CI-friendly demo script that checks for required tooling and performs basic smoke tests
