@@ -180,16 +180,19 @@ markdown_extensions:
 ###
 
 nav:
-  - Documentation Site Template: README.md
-  - How-to Guides:
-    - How-to Guides: guides/README.md
-    - GitHub Avatars Setup Guide: guides/github-avatars-setup.md
-    - Installation Guide: guides/installation-guide.md
-    - init_site.sh Script: guides/understanding-init-script.md
-  - Reference Documentation:
-    - Reference Documentation: reference/README.md
-    - API Reference: reference/api-reference.md
+  - Home: tutorials/README.md
   - Tutorials:
-    - Tutorials: tutorials/README.md
-    - Basic Tutorial: tutorials/01-basic-tutorial.md
-    - Advanced Features Tutorial: tutorials/02-advanced-tutorial.md
+    - 000-Setup: tutorials/000-setup/README.md
+    - 001-Verify-Cluster: tutorials/001-verify-cluster/README.md
+    - 002-New-User: tutorials/002-new-user/README.md
+    - 003-New-Project: tutorials/003-new-project/README.md
+    - 004-Docker-Lifecycle: tutorials/004-docker-lifecycle/README.md
+    - 005-Docker-Pipeline: tutorials/005-docker-pipeline/README.md
+    - 006-Hooks-Setup: tutorials/006-hooks-setup/README.md
+    - 007-Images-ImageStream: tutorials/007-images-imagestream/README.md
+    - 008-Deploying: tutorials/008-deploying/README.md
+    - 009-Services-Routes: tutorials/009-services-routes/README.md
+    - 010-Monitoring: tutorials/010-monitoring/README.md
+    - 011-Logging: tutorials/011-logging/README.md
+    - 012-Scaling: tutorials/012-scaling/README.md
+

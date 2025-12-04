@@ -2,7 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2025-11-30] - Dynamic CI Workflow
+## Lab Structure Reorganization
+
+### Added
+- Created `001-verify-cluster` module for cluster health verification between setup and user management
+- Created `011-logging` module for centralized logging with EFK/ELK stack
+- Created `012-scaling` module for Horizontal Pod Autoscaling and manual scaling strategies
+- Professional overview and presentation in `Labs/tutorials/README.md` including OpenShift introduction and learning path guidance
+
+### Changed
+- Moved all lab modules from `Labs/guides/` to `Labs/tutorials/` to align with Nir Geier's original structure
+- Renumbered all modules from 001-009 to 002-010 to accommodate new verify-cluster module
+- Updated navigation in `mkdocs/06-mkdocs-nav.yml` to use `tutorials/` paths
+- Updated `Labs/guides/README.md` to reference tutorials section
+- Updated root `README.md` to reflect all 13 modules (000-012) in tutorials directory
+- Removed "Documentation Site Template" from navigation
+- Set `tutorials/README.md` as home page in MkDocs navigation
+
+### Removed
+- `Labs/tutorials/01-basic-tutorial.md` and `02-advanced-tutorial.md` (placeholder files)
+
+### Technical Details
+- All lab modules now reside in `Labs/tutorials/` maintaining git history through `git mv`
+- Module numbering follows logical flow: setup → verify → user management → projects → docker → deployment → operations
+- Each module includes README.md with learning objectives and _demo.sh CI-friendly smoke test script
+- Navigation structure simplified to focus on hands-on lab content
+
+## Dynamic CI Workflow
 
 ### Added
 - Created `.github/workflows/test-labs.yaml` with dynamic matrix testing
@@ -15,7 +41,7 @@ All notable changes to this project will be documented in this file.
 - Includes comprehensive workflow documentation in file header
 - CI-friendly with proper GitHub Actions conditionals (success/failure)
 
-## [2025-11-29] - Guides Structure & Demo Scripts
+## Guides Structure & Demo Scripts
 
 ### Added
 - Created 11 lab modules under `Labs/guides/` (000-setup through 010-monitoring)
