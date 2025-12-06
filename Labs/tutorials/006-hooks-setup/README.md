@@ -1,18 +1,65 @@
-# 006-Hooks Setup — Git hooks, build hooks, and webhooks in pipelines
+# Lab 006: Webhooks and Automated Builds
 
-This module explains how to configure hooks and webhooks that trigger builds and deployments when code changes.
+## Overview
 
-## Objectives
+In Lab 005, you manually triggered builds by clicking "Start Build". In real CI/CD workflows, builds should trigger automatically when developers push code changes. This lab teaches you to configure **webhooks** that automatically start OpenShift builds whenever code is pushed to your Git repository.
 
-- Understand Git hooks and webhooks for CI triggers.
-- Configure build hooks for automated build triggers in pipelines.
-- Secure webhooks and verify the trigger mechanism.
+## Learning Objectives
 
-## Tasks
+By completing this lab, you will:
 
-1. Create a Git repository and add webhook settings to trigger the pipeline.
-2. Configure build and deploy hooks to automate continuous delivery.
-3. Test a push to the repo and confirm pipeline triggers and build completion.
+- Understand the concept of webhooks in OpenShift CI/CD
+- Learn how BuildConfig webhooks trigger builds on code push
 
-Estimated time: 20–45 minutes
+## Prerequisites
 
+- Completed Lab 005 (have a BuildConfig created)
+- Familiarity with SCM concept (github, bitbucket)
+- Understanding of CI/CD concepts
+
+---
+
+## Background: Webhooks in CI/CD
+
+**Traditional workflow (manual):**
+1. Developer pushes code to Git
+2. Someone manually triggers build
+3. Wait for build to complete
+4. Manually deploy if needed
+
+**Automated workflow (webhooks):**
+1. Developer pushes code to Git
+2. Git server sends webhook to OpenShift
+3. OpenShift automatically starts new build
+4. On success, automatically redeploys application
+
+---
+
+## Lab Instructions 
+
+This lab is conceptual and requires no actions. The summary below explains how webhooks fit into OpenShift builds and deployments.
+
+# Understanding Webhooks
+
+## What and Why 
+- A webhook is a simple message sent by your Git server to OpenShift when you push code.
+- OpenShift uses that message to automatically start a new Build.
+- After a successful Build, OpenShift updates the image in an ImageStream and rolls out your Deployment.
+- Benefit: fewer manual clicks and faster feedback after each commit.
+
+## How It Works 
+1. You push code to GitHub/GitLab.
+2. The Git platform sends an HTTP POST (the webhook) to your BuildConfig’s webhook URL.
+3. OpenShift checks the secret embedded in the URL to verify the request.
+4. A Build starts; if it completes, your app is redeployed with the new image.
+
+## Quick Setup (Optional)
+- In OpenShift: BuildConfig → Webhooks → copy the GitHub webhook URL with secret.
+- In your own Git repo: Settings → Webhooks → Add webhook → paste the URL.
+- Push a commit to test; the Build should start automatically if permissions are correct.
+
+## Next
+- Continue to [Lab 007: Image Streams and Tagging](../007-images-imagestream/README.md).
+
+
+---
