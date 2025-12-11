@@ -546,6 +546,8 @@ Let's explore the RBAC we configured in previous steps.
    - **CR** badge = ClusterRole (cluster-wide role definition)
    - **R** badge = Role (namespace-specific role definition)
 
+  ![alt text](RoleBindings.png)
+
 4. At the top left, click the **Project: All Projects** dropdown and select **team-project**
 
    The table filters to show only RoleBindings in the `team-project` namespace. You should see:
@@ -726,22 +728,28 @@ read-pods   Role/pod-reader    15m
 
 ### Step 10: Understanding ClusterRoleBindings
 
-ClusterRoleBindings grant permissions cluster-wide, not just in one project.
+ClusterRoleBindings grant permissions cluster-wide, not just in one project. They're used extensively for system components.
 
-View cluster role bindings:
+View all ClusterRoleBindings that grant cluster-admin:
 
 ```bash
 oc login -u kubeadmin -p $(cat ~/.crc/machines/crc/kubeadmin-password) https://api.crc.testing:6443
 oc get clusterrolebindings | grep cluster-admin
 ```
 
-Expected output:
+Expected output (many results):
 
 ```text
-cluster-admin                                          ClusterRole/cluster-admin                                          99d
+cluster-admin                                                               ClusterRole/cluster-admin       99d
+cluster-admins                                                              ClusterRole/cluster-admin       99d
+kubeadmin                                                                   ClusterRole/cluster-admin       98d
+system:openshift:oauth-apiserver                                            ClusterRole/cluster-admin       99d
+system:openshift:operator:etcd-operator                                     ClusterRole/cluster-admin       99d
+...
+(many more - system operators need cluster-admin)
 ```
 
-Describe it:
+Many system components need cluster-admin permissions to manage the cluster. Let's examine the main one:
 
 ```bash
 oc describe clusterrolebinding cluster-admin
@@ -757,14 +765,16 @@ Role:
   Kind:  ClusterRole
   Name:  cluster-admin
 Subjects:
-  Kind   Name        Namespace
-  ----   ----        ---------
+  Kind   Name            Namespace
+  ----   ----            ---------
   Group  system:masters
 ```
 
-The `system:masters` group has cluster-admin privileges. The `kubeadmin` user is part of this group.
+**What this means:**
 
-**Warning:** ClusterRoleBindings grant powerful permissions. Use them carefully.
+- The `cluster-admin` ClusterRoleBinding grants the `cluster-admin` ClusterRole to the `system:masters` group
+- This applies to ALL namespaces (cluster-wide)
+- The `kubeadmin` user is a member of `system:masters` which is why it has full cluster access
 
 ---
 
@@ -783,7 +793,7 @@ Grant users the minimum permissions needed:
 
 ### Project-Level vs Cluster-Level
 
-- Use **RoleBindings** for project-specific access (most common)
+- Use **RoleBindings** for project-specific access
 - Use **ClusterRoleBindings** only when cluster-wide access is required
 
 ### Custom Roles
@@ -821,7 +831,7 @@ If you don't see a project:
 oc projects
 ```
 
-You may lack permissions. Ask a project admin to grant you access.
+You may lack permissions. Check as an admin.
 
 ### Role Binding Not Working
 
