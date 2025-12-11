@@ -207,17 +207,13 @@ crc                  Ready    control-plane,master,worker   10m   v1.xx.x
 1. Open your browser and navigate to: `https://console-openshift-console.apps-crc.testing`
 2. Accept the SSL certificate warning (safe for local development)
 3. Log in as `developer` / `developer`
-4. You'll see the OpenShift console with two perspectives:
-   - **Developer**: Application-focused view (default for developers)
-   - **Administrator**: Infrastructure and cluster management
+4. You'll see the OpenShift web console home page
 
    ![alt text](overview.png)
 
 ---
 
 ### Step 7: Create Your First Project
-
-In Developer perspective:
 
 1. Click **Home** → **Projects** → **Create Project**
 
